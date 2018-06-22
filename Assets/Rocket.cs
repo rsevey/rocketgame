@@ -62,4 +62,26 @@ public class Rocket : MonoBehaviour
             audioSource.Stop();
         }
     }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        foreach (ContactPoint contact in collision.contacts)
+        {
+           switch (collision.gameObject.tag)
+            {
+                case "Friendly":
+                    break;
+                case "Enemy":
+                    Debug.Log("YOU'RE DEAD!");
+                    break;
+                case "Fuel":
+                    break;
+                case "Finish":
+                    Debug.Log("YOU WIN!!!!");
+                    break;
+            }
+        }
+        if (collision.relativeVelocity.magnitude > 2)
+            audioSource.Play();
+    }
 }
