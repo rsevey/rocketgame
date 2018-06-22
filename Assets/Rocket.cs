@@ -9,6 +9,9 @@ public class Rocket : MonoBehaviour
     [SerializeField] float rcsThrust = 100f;
     [SerializeField] float mainThurst = 10f;
 
+    enum State { Alive, Dying, Transcinding}
+    State state = State.Alive;
+
     // Use this for initialization
     void Start ()
     {
@@ -19,9 +22,11 @@ public class Rocket : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        Rotate();
-        Thrust();
-
+        if (state == State.Alive)
+        {
+            Rotate();
+            Thrust();
+        }
         
 
     }
@@ -63,23 +68,39 @@ public class Rocket : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        foreach (ContactPoint contact in collision.contacts)
+        if (state != State.Alive) { return; }
+
         {
            switch (collision.gameObject.tag)
             {
                 case "Friendly":
                     break;
                 case "Enemy":
-                    SceneManager.LoadScene(0);
+                    state = State.Dying;                
+                    Invoke("Restart", 1f);
                     break;
                 case "Fuel":
                     break;
                 case "Finish":
-                    SceneManager.LoadScene(1);
+                    state = State.Transcinding;
+                    Invoke("LoadNext", 1f); // parameterise time
                     break;
             }
         }
         if (collision.relativeVelocity.magnitude > 2)
             audioSource.Play();
+    }
+
+   private void Restart()
+    {
+
+        int scene = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(scene, LoadSceneMode.Single);
+    }
+
+    private void LoadNext()
+    {
+        state = State.Alive;
+        SceneManager.LoadScene(1);
     }
 }
