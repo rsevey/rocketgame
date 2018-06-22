@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Rocket : MonoBehaviour
 {
@@ -72,12 +70,12 @@ public class Rocket : MonoBehaviour
                 case "Friendly":
                     break;
                 case "Enemy":
-                    Debug.Log("YOU'RE DEAD!");
+                    SceneManager.LoadScene(0);
                     break;
                 case "Fuel":
                     break;
                 case "Finish":
-                    Debug.Log("YOU WIN!!!!");
+                    SceneManager.LoadScene(1);
                     break;
             }
         }
